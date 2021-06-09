@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 
 
 """ MIT License
@@ -43,7 +43,7 @@ class FTMReader(object):
             anchorId = str(data[0])
             rtt_est = int(data[1])
             rtt_raw = int(data[2])
-            dist = int(data[3])/100
+            dist = int(data[3])/100.0
             numFrames = int(data[4])
 
             ftmRanging = ESP32S2FTMRanging()
@@ -54,8 +54,8 @@ class FTMReader(object):
             ftmRanging.num_frames = numFrames
             ftmRanging.frames = []
 
-            #print("AnchorId: " + anchorId + " rtt_est: " + str(rtt_est) + " rtt_raw: " + str(rtt_raw) + " dist: " + str(dist) + " numFrames: " + str(numFrames))
-            #frames = []
+            print("AnchorId: " + anchorId + " rtt_est: " + str(rtt_est) + " rtt_raw: " + str(rtt_raw) + " dist: " + str(dist) + " numFrames: " + str(numFrames))
+            frames = []
             for index in range(numFrames):
                 frameRtt = int(data[5+index*6])
                 frameRssi = int(data[5+index*6+1])
@@ -72,8 +72,8 @@ class FTMReader(object):
                 aFrame.t4 = frameT4
                 ftmRanging.frames.append(aFrame)
 
-            # for frame in frames:
-            #     print("Frame: ["+ "rtt_est: "+ str(frame[0]) + " rssi: "+ str(frame[1]) + " t1: "+ str(frame[2]) + " t2: "+ str(frame[3]) + " t3: "+ str(frame[4]) + " t4: "+ str(frame[5]) + "]")
+            #for frame in ftmRanging.frames:
+            #    print("Frame: ["+ "rtt_est: "+ str(frame[0]) + " rssi: "+ str(frame[1]) + " t1: "+ str(frame[2]) + " t2: "+ str(frame[3]) + " t3: "+ str(frame[4]) + " t4: "+ str(frame[5]) + "]")
             self.publisher.publish(ftmRanging)
 
         except Exception as e:
@@ -89,7 +89,7 @@ if __name__ == "__main__":
     
 
     pub_ranging = rospy.Publisher("/gtec/ftm/", ESP32S2FTMRanging, queue_size=100)
-    rate = rospy.Rate(5) # 10hz
+    rate = rospy.Rate(10) # 10hz
 
 
     print("=========== FTM Tag reader ============")
