@@ -59,12 +59,12 @@ class FTMReaderExtra(object):
             print("AnchorId: " + anchorId + " rtt_est: " + str(rtt_est) + " rtt_raw: " + str(rtt_raw) + " dist: " + str(dist) + " own_dist: "+ str(own_dist)+ " numFrames: " + str(numFrames))
             frames = []
             for index in range(numFrames):
-                frameRtt = int(data[5+index*6])
-                frameRssi = int(data[5+index*6+1])
-                frameT1 = int(data[5+index*6+2])
-                frameT2 = int(data[5+index*6+3])
-                frameT3 = int(data[5+index*6+4])
-                frameT4 = int(data[5+index*6+5])
+                frameRtt = int(data[6+index*6])
+                frameRssi = int(data[6+index*6+1])
+                frameT1 = int(data[6+index*6+2])
+                frameT2 = int(data[6+index*6+3])
+                frameT3 = int(data[6+index*6+4])
+                frameT4 = int(data[6+index*6+5])
                 aFrame = ESP32S2FTMFrame()
                 aFrame.rtt = frameRtt
                 aFrame.rssi = frameRssi
