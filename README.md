@@ -10,9 +10,9 @@ The nodes included in the repository are:
 
 GTEC ROS TOA package has the next dependencies:
 
-* **gtec_msgs** Another GTEC ROS project with a set o custom messages definitions. Available [https://github.com/valentinbarral/rosmsgs](https://github.com/valentinbarral/rosmsgs)
+* **gtec_msgs** Another GTEC ROS project with a set o custom messages definitions. Available [https://github.com/GTEC-UDC/rosmsgs](https://github.com/GTEC-UDC/rosmsgs)
 
-Additionally, the ESP32 S2 must be loaded with the code available here: [https://github.com/valentinbarral/esp32s2-ftm-tag](https://github.com/valentinbarral/esp32s2-ftm-tag)
+Additionally, the ESP32 S2 must be loaded with the code available here: [https://github.com/GTEC-UDC/esp32s2-ftm-tag](https://github.com/GTEC-UDC/esp32s2-ftm-tag)
 
 ## Building the nodes
 
@@ -20,7 +20,7 @@ To build the nodes, source code must be cloned inside a catkin workspace on a RO
 
 ```bash
 $ cd ~/catkin_ws/src
-$ git clone https://github.com/valentinbarral/rosftm.git
+$ git clone https://github.com/GTEC-UDC/rosftm.git
 ```
 
 Then ```catkin_make``` must be used to build the nodes:
@@ -41,4 +41,12 @@ $ roslaunch gtec_ftm esp32s2ftmtagreader.launch
 ```
 
 The launcher accepts the parameter *serial*, that points to the port where the ESP32 is connected. By default: */dev/ttyUSB0*.
+
+## Cite
+
+The code in this repository is related to the following work:
+
+*V. Barral Vales, O. C. Fernández, T. Domínguez-Bolaño, C. J. Escudero and J. A. García-Naya, "Fine Time Measurement for the Internet of Things: A Practical Approach Using ESP32," in IEEE Internet of Things Journal, vol. 9, no. 19, pp. 18305-18318, 1 Oct.1, 2022, doi: 10.1109/JIOT.2022.3158701.* 
+
+If you make use of this code, a citation is appreciated.
 
