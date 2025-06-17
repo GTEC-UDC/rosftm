@@ -4,6 +4,10 @@ from glob import glob
 
 package_name = 'gtec_ftm'
 
+# Debug: imprimir archivos encontrados
+launch_files = glob('launch/*_launch.py')
+print(f"Launch files found: {launch_files}")
+
 setup(
     name=package_name,
     version='1.0.0',
@@ -12,7 +16,7 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        (os.path.join('share', package_name, 'launch'), glob('launch/*.launch.py')),
+        (os.path.join('share', package_name, 'launch'), glob('launch/*_launch.py')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
