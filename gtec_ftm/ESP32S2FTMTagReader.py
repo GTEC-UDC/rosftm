@@ -119,11 +119,9 @@ class FTMReader(Node):
             if dataStr.strip().startswith('{'):
                 # JSON format
                 anchorId, rtt_est, rtt_raw, dist, numFrames, frames = self.parse_json_data(dataStr)
-                self.get_logger().info(f"JSON format detected - AnchorId: {anchorId}")
             else:
                 # CSV format
                 anchorId, rtt_est, rtt_raw, dist, numFrames, frames = self.parse_csv_data(dataStr)
-                self.get_logger().info(f"CSV format detected - AnchorId: {anchorId}")
 
             ftmRanging = ESP32S2FTMRanging()
             ftmRanging.anchor_id = anchorId

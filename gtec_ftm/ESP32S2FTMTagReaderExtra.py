@@ -96,7 +96,7 @@ class FTMReaderExtra(Node):
                     aFrame.t4 = int(frame_data['t4'])
                     ftmRanging.frames.append(aFrame)
                 
-                self.get_logger().info(f"JSON format - AnchorId: {anchorId} rtt_est: {rtt_est} rtt_raw: {rtt_raw} dist: {dist} own_dist: {own_dist} numFrames: {numFrames}")
+                self.get_logger().info(f"AnchorId: {anchorId} rtt_est: {rtt_est} rtt_raw: {rtt_raw} dist: {dist} own_dist: {own_dist} numFrames: {numFrames}")
             else:
                 # CSV format
                 data = dataStr.split(',')
@@ -132,7 +132,7 @@ class FTMReaderExtra(Node):
                     aFrame.t4 = frameT4
                     ftmRanging.frames.append(aFrame)
                 
-                self.get_logger().info(f"CSV format - AnchorId: {anchorId} rtt_est: {rtt_est} rtt_raw: {rtt_raw} dist: {dist} own_dist: {own_dist} numFrames: {numFrames}")
+                self.get_logger().info(f"AnchorId: {anchorId} rtt_est: {rtt_est} rtt_raw: {rtt_raw} dist: {dist} own_dist: {own_dist} numFrames: {numFrames}")
 
             self.publisher.publish(ftmRanging)
 
