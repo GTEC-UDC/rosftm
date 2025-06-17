@@ -1,52 +1,145 @@
-# README
+# GTEC FTM - ROS2 Package
 
-This repository includes several tools and ROS nodes to process FTM ranging values.
+ROS2 package for reading data from ESP32S2 FTM (Fine Timing Measurement) devices via serial port and publishing to ROS2 topics.
 
-The nodes included in the repository are:
+## Overview
 
-* **ESP32S2FTMReader** This node reads the frames from a FTM communication between a ESP32 S2 and another FTM device. 
+This package provides ROS2 nodes to interface with ESP32S2 FTM Tag Reader devices. It reads ranging data from the serial port and publishes it as ROS2 messages.
+
+## Node Versions
+
+This package includes two versions of the FTM Tag Reader node, designed to work with different ESP32S2 firmware configurations:
+
+### ESP32S2FTMTagReader (Standard Version)
+- **Purpose**: Basic FTM tag reader for standard ranging measurements
+- **CSV Format**: `anchorId,rtt_est,rtt_raw,dist,numFrames,frame1_data,frame2_data,...`
+- **Message Type**: `gtec_msgs/ESP32S2FTMRanging`
+- **Use Case**: Standard FTM ranging applications where basic distance estimation is sufficient
+
+### ESP32S2FTMTagReaderExtra (Extended Version)
+- **Purpose**: Enhanced FTM tag reader with additional distance estimation
+- **CSV Format**: `anchorId,rtt_est,rtt_raw,dist,own_dist,numFrames,frame1_data,frame2_data,...`
+- **Message Type**: `gtec_msgs/ESP32S2FTMRangingExtra`
+- **Additional Field**: `own_dist` - provides an additional distance estimate calculated by the device
+- **Use Case**: Applications requiring multiple distance estimation methods or enhanced accuracy analysis
+
+**Key Difference**: The Extra version includes an additional `own_dist` field in the CSV data stream, which provides a secondary distance estimate. This requires compatible ESP32S2 firmware that outputs the extended CSV format.
+
+## Features
+
+- Two node variants for different ESP32S2 firmware configurations
+- ROS2 launch files for easy deployment
+- Configurable serial port parameter
+- Real-time FTM ranging data processing
+- Frame-level data parsing (RTT, RSSI, timestamps)
 
 ## Dependencies
 
-GTEC ROS TOA package has the next dependencies:
+- ROS2 (tested with ROS2 Humble/Iron/Jazzy)
+- Python 3
+- `pyserial` library
+- `gtec_msgs` package (custom message definitions)
 
-* **gtec_msgs** Another GTEC ROS project with a set o custom messages definitions. Available [https://github.com/GTEC-UDC/rosmsgs](https://github.com/GTEC-UDC/rosmsgs)
+## Installation
 
-Additionally, the ESP32 S2 must be loaded with the code available here: [https://github.com/GTEC-UDC/esp32s2-ftm-tag](https://github.com/GTEC-UDC/esp32s2-ftm-tag)
-
-## Building the nodes
-
-To build the nodes, source code must be cloned inside a catkin workspace on a ROS installation (see [Creating a workspace for catkin](http://wiki.ros.org/catkin/Tutorials/create_a_workspace)). If the catkin work space is located at ```~/catkin_ws``` then:
-
+1. Clone this repository into your ROS2 workspace:
 ```bash
-$ cd ~/catkin_ws/src
-$ git clone https://github.com/GTEC-UDC/rosftm.git
+cd ~/ros2_ws/src
+git clone <repository_url>
 ```
 
-Then ```catkin_make``` must be used to build the nodes:
-
+2. Install dependencies:
 ```bash
-$ cd ~/catkin_ws
-$ catkin_make
+# Install Python serial library
+pip3 install pyserial
+
+# Or using apt (if available)
+sudo apt install python3-serial
 ```
 
-## Launching the nodes
-
-There are several *.launch* files in the project to launch the nodes using the ```roslaunch``` command. 
-
-Launching **ESP32S2FTMReader** node:
-
+3. Build the workspace:
 ```bash
-$ roslaunch gtec_ftm esp32s2ftmtagreader.launch
+cd ~/ros2_ws
+colcon build
+source install/setup.bash
 ```
 
-The launcher accepts the parameter *serial*, that points to the port where the ESP32 is connected. By default: */dev/ttyUSB0*.
+## Usage
 
-## Cite
+### Basic FTM Tag Reader
 
-The code in this repository is related to the following work:
+```bash
+# Launch with default settings
+ros2 launch gtec_ftm esp32s2ftmtagreader_launch.py
 
-*V. Barral Vales, O. C. Fernández, T. Domínguez-Bolaño, C. J. Escudero and J. A. García-Naya, "Fine Time Measurement for the Internet of Things: A Practical Approach Using ESP32," in IEEE Internet of Things Journal, vol. 9, no. 19, pp. 18305-18318, 1 Oct.1, 2022, doi: 10.1109/JIOT.2022.3158701.* 
+# Launch with custom serial port
+ros2 launch gtec_ftm esp32s2ftmtagreader_launch.py serial:=/dev/ttyUSB1
+```
 
-If you make use of this code, a citation is appreciated.
+### Extended FTM Tag Reader
+
+```bash
+# Launch with default settings
+ros2 launch gtec_ftm esp32s2ftmtagreaderextra_launch.py
+
+# Launch with custom serial port
+ros2 launch gtec_ftm esp32s2ftmtagreaderextra_launch.py serial:=/dev/ttyUSB1
+```
+
+### Running Nodes Directly
+
+```bash
+# Run basic reader
+ros2 run gtec_ftm ESP32S2FTMTagReader --ros-args -p serial:=/dev/ttyUSB0
+
+# Run extended reader
+ros2 run gtec_ftm ESP32S2FTMTagReaderExtra --ros-args -p serial:=/dev/ttyUSB0
+```
+
+## Topics
+
+Both nodes publish to the `/gtec/ftm/` topic but with different message types:
+
+- **Standard Version**: Publishes `gtec_msgs/ESP32S2FTMRanging` messages
+- **Extended Version**: Publishes `gtec_msgs/ESP32S2FTMRangingExtra` messages (includes additional `own_est` field)
+
+**Note**: Choose the appropriate version based on your ESP32S2 firmware output format. The Extended version is only compatible with firmware that outputs the additional distance estimate field.
+
+## Parameters
+
+- `serial` (string, default: "/dev/ttyUSB0"): Serial port device path
+
+## Message Format
+
+### Standard Version (ESP32S2FTMTagReader)
+Parses CSV data in the format: `anchorId,rtt_est,rtt_raw,dist,numFrames,frameData...`
+
+Published message (`gtec_msgs/ESP32S2FTMRanging`) contains:
+- `anchorid`: Anchor identifier
+- `rtt_est`: Processed RTT estimate
+- `rtt_raw`: Raw RTT measurement
+- `dist_est`: Distance estimate (in meters)
+- `num_frames`: Number of measurement frames
+- `frames[]`: Array of frame data (RTT, RSSI, T1-T4 timestamps)
+
+### Extended Version (ESP32S2FTMTagReaderExtra)
+Parses CSV data in the format: `anchorId,rtt_est,rtt_raw,dist,own_dist,numFrames,frameData...`
+
+Published message (`gtec_msgs/ESP32S2FTMRangingExtra`) contains:
+- `anchorid`: Anchor identifier
+- `rtt_est`: Processed RTT estimate
+- `rtt_raw`: Raw RTT measurement
+- `dist_est`: Primary distance estimate (in meters)
+- `own_est`: Secondary distance estimate (in meters) - **Extra field**
+- `num_frames`: Number of measurement frames
+- `frames[]`: Array of frame data (RTT, RSSI, T1-T4 timestamps)
+
+## License
+
+MIT License - see LICENSE file for details.
+
+## Authors
+
+- Valentin Barral (valentin.barral@udc.es)
+- Group of Electronic Technology and Communications, University of A Coruña
 

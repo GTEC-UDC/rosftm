@@ -1,26 +1,28 @@
 <?xml version="1.0"?>
-<package>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
   <name>gtec_ftm</name>
   <version>1.0.0</version>
-  <description>The gtec_ftm package</description>
+  <description>The gtec_ftm package - ROS2 port</description>
 
   <maintainer email="valentin.barral@udc.es">Valentin Barral</maintainer>
 
   <license>MIT</license>
 
+  <depend>rclpy</depend>
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>gtec_msgs</depend>
 
-  <build_depend>gtec_msgs</build_depend> 
-  <build_depend>std_msgs</build_depend>
-  <build_depend>geometry_msgs</build_depend>
-  <run_depend>message_runtime</run_depend>
-  <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>rospy</build_depend>
+  <exec_depend>python3-serial</exec_depend>
 
-  <run_depend>rospy</run_depend>
-  <run_depend>std_msgs</run_depend>
-  <run_depend>geometry_msgs</run_depend>
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
 
   <export>
-
+    <build_type>ament_python</build_type>
   </export>
+
 </package>

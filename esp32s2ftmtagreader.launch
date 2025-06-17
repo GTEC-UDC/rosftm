@@ -1,6 +1,0 @@
-<launch>
- 	<arg default="/dev/ttyUSB0" name="serial"></arg>
-    <node name="ESP32S2FTMTagReader" output="screen" pkg="gtec_ftm" type="ESP32S2FTMTagReader.py">
-        <param name="serial" value="$(arg serial)"></param>
-    </node>
-</launch>
